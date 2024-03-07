@@ -60,16 +60,18 @@ if(user){
   token.email = user.email
   token.id = user.id
 }
-console.log("this is token",token)
+// console.log("this is token",token)
 return token
 },
- async session({session,token}){
+ async session({session , token}){
+  console.log(session)
   if(token){
     session.user.username = token.username
     session.user.email = token.email
     session.user.id = token.id
   }
-  return session
+console.log("this is session",session)
+  return session;
  }
 
 },

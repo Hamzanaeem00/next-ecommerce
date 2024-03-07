@@ -19,6 +19,7 @@ export function Signup() {
   // console.log(register);
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+  const [success, setSuccess] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,29 +31,29 @@ export function Signup() {
       setError("Provide All the Cred");
     } else {
       setError("");
-    }
+      try {
+        const res = await fetch("api/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(register),
+        });
 
-    try {
-      const res = await fetch("api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(register),
-      });
-
-      if (res.ok) {
+        if (res.ok) {
+          setPending(false);
+          setRegister({ username: "", email: "", password: "" });
+          console.log("User Registered");
+          setSuccess("User Created Successfully");
+        } else {
+          const errorData = await res.json();
+          setError(errorData.message);
+          setPending(false);
+        }
+      } catch (error) {
         setPending(false);
-        setRegister({ username: "", email: "", password: "" });
-        console.log("User Registered");
-      } else {
-        const errorData = await res.json();
-        setError(errorData.message);
-        setPending(false);
+        console.log("Something Went Wrong");
       }
-    } catch (error) {
-      setPending(false);
-      console.log("Something Went Wrong");
     }
   };
   return (
@@ -60,6 +61,10 @@ export function Signup() {
       {error ? (
         <div className="text-white bg-red-300 p-1 rounded text-center">
           {error}
+        </div>
+      ) : success ? (
+        <div className="text-white bg-green-300 p-1 rounded text-center">
+          {success}
         </div>
       ) : (
         ""
