@@ -1,13 +1,10 @@
 "use client";
 import { useSession } from "next-auth/react";
 import LandingPage from "../components/landing-page/landingpage";
-import { getToken } from "next-auth/jwt";
 
 export default function Home() {
   const { data: session } = useSession();
-  console.log(session);
-  const token = getToken();
-  console.log(token);
+  console.log("session==>",session);
   // const router = useRouter();
   // if (!session) {
   //   return (

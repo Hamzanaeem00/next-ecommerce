@@ -1,6 +1,6 @@
 import { MongoDBAdapter } from '@auth/mongodb-adapter'
 import GoogleProvider from 'next-auth/providers/google'
-import clientPromise from '../../../../../lib/mongodb'
+import clientPromise from '../../../../lib/mongodb'
 import CredentialsProvider from "next-auth/providers/credentials"
 import User from '../../../../../models/userModel'
 import connectDB from '../../../../../utils/connect'
@@ -53,28 +53,34 @@ const handler = NextAuth({
       clientSecret: "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"
     }),
 ],
-callbacks:{
-  async jwt({token, user}){
-if(user){
-  token.username = user.username 
-  token.email = user.email
-  token.id = user.id
-}
-// console.log("this is token",token)
-return token
+callbacks: {
+  async jwt({ token, user }) {
+    if (user) {
+      token.username = user.username;
+      token.email = user.email;
+      token.id = user.id;
+    }
+    console.log('jwt token:', token);
+    return token;
+  },
+   session({ session, token }) {
+    console.log("sesso00n",token)
+    try {
+      if (token) {
+        session.user.username = token.username;
+        session.user.email = token.email;
+        session.user.id = token.id;
+      }
+      console.log('session:', session);
+      return session;
+    } catch (error) {
+      console.error('Error in session callback:', error);
+      throw error;
+    }
+  },
+  
 },
- async session({session , token}){
-  console.log(session)
-  if(token){
-    session.user.username = token.username
-    session.user.email = token.email
-    session.user.id = token.id
-  }
-console.log("this is session",session)
-  return session;
- }
 
-},
 
 adapter: MongoDBAdapter(clientPromise)
 })

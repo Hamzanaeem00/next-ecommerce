@@ -21,6 +21,7 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+
 export default function Login() {
   const router = useRouter();
   const [register, setRegister] = useState({
@@ -29,7 +30,6 @@ export default function Login() {
   });
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setRegister((prev) => ({ ...prev, [name]: value }));
